@@ -37,4 +37,4 @@ bot.onText(/\/csv$/i, (msg) => {
 bot.on("message", (msg) => {
   message(msg, bot, userSteps);
 });
-console.log("Bot-tele Running....");
+console.log("Bot-tele Running...");
