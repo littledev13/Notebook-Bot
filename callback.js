@@ -1,41 +1,71 @@
-const message = (msg, bot, userSteps) => {
+import { get } from "./firebase.js";
+
+const message = async (msg, bot) => {
   const chatId = msg.chat.id;
+  const text = msg.text;
+  console.log(text);
 
   // Pastikan pengguna sedang dalam proses pengisian form
+  if (text == "Balance  💵") {
+    const data = await get(["Balance"]);
+    console.clear();
+    console.log(data);
+    const formatData = (data) => {
+      let formattedMessage = "";
 
-  if (userSteps[chatId] && userSteps[chatId].type == "input") {
-    const currentStep = userSteps[chatId].step;
+      data.forEach((item) => {
+        formattedMessage += `*${item.id}*\n`; // Menambahkan data
+        if (Object.keys(item.data).length > 0) {
+          Object.keys(item.data).forEach((key) => {
+            formattedMessage += `_${key}_: ${item.data[key]}\n`; // Menambahkan data
+          });
+        } else {
+          formattedMessage += "_No data available_\n"; // Jika tidak ada data
+        }
+        formattedMessage += "\n"; // Menambahkan spasi antara bagian data
+      });
 
-    if (currentStep === 1) {
-      // Simpan nama pengguna
-      userSteps[chatId].data.name = msg.text;
-      userSteps[chatId].step++; // Lanjut ke langkah berikutnya
-      bot.sendMessage(chatId, "How old are you?");
-    } else if (currentStep === 2) {
-      // Simpan usia pengguna
-      const age = parseInt(msg.text, 10);
-      if (isNaN(age)) {
-        bot.sendMessage(chatId, "Please enter a valid number for your age.");
-        return;
-      }
+      return formattedMessage;
+    };
 
-      userSteps[chatId].data.age = age;
-      userSteps[chatId].step++; // Lanjut ke langkah berikutnya
-      bot.sendMessage(chatId, "What is your email?");
-    } else if (currentStep === 3) {
-      // Simpan email pengguna
-      userSteps[chatId].data.email = msg.text;
+    // Format data menjadi string Markdown
+    const message = formatData(data);
+    bot.sendMessage(chatId, "*Balance* :\n" + message, {
+      parse_mode: "Markdown",
+    });
+  }
+  if (text == "History 📜") {
+    const data = await get(["Trade"]);
+    console.clear();
+    console.log(data);
+    const formatData = (data) => {
+      let formattedMessage = "";
 
-      // Tampilkan data yang dikumpulkan
-      const { name, age, email } = userSteps[chatId].data;
-      bot.sendMessage(
-        chatId,
-        `Thank you! Here is your data:\nName: ${name}\nAge: ${age}\nEmail: ${email}`
-      );
+      data.forEach((item, index) => {
+        formattedMessage += `*Tanggal* : ${item.id}\n`; // Menambahkan data
+        if (Object.keys(item.data).length > 0) {
+          Object.keys(item.data).forEach((key) => {
+            formattedMessage += `*${key}* : ${item.data[key]}\n`; // Menambahkan data
+          });
+        } else {
+          formattedMessage += "_No data available_\n"; // Jika tidak ada data
+        }
+      });
 
-      // Hapus progres pengguna setelah selesai
-      delete userSteps[chatId];
-    }
+      return formattedMessage;
+    };
+
+    // Format data menjadi string Markdown
+    const message = formatData(data);
+    bot.sendMessage(chatId, "*History* :\n" + message, {
+      parse_mode: "Markdown",
+    });
+  }
+  if (text == "Trade 💼") {
+    bot.sendMessage(chatId, "Trade 💼");
+  }
+  if (text == "Statistik 📊") {
+    bot.sendMessage(chatId, "Statistik 📊");
   }
 };
 export default message;

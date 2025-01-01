@@ -1,41 +1,26 @@
 // TODO Import
 import TelegramBot from "node-telegram-bot-api";
-import { get } from "./firebase.js";
-import {
-    onInputText,
-    onRiwayatText,
-    onStatistikText,
-    onCsvText
-} from "./controller.js";
+import { get, postTrade } from "./firebase.js";
+import { onInputText } from "./controller.js";
 import message from "./callback.js";
 
 // TODO Variable
 const token = "7869224045:AAGQns3-FQuCJiGyA3vpDcIcUiu8VGHWcNc";
 const bot = new TelegramBot(token, { polling: true });
-const userSteps = {};
 // * Code
 // TODO input
-bot.onText(/\/input$/i, msg => {
-    onInputText(msg, bot);
+bot.onText(/\/menu$/i, (msg) => {
+  onInputText(msg, bot);
+});
+bot.on("message", (e) => {
+  message(e, bot);
 });
 
-// TODO Riwayat
-bot.onText(/\/riwayat$/i, msg => {
-    onRiwayatText(msg, bot);
-});
-// TODO Statistik
-bot.onText(/\/statistik$/i, msg => {
-    onStatistikText(msg, bot);
-});
-// TODO CSV
-bot.onText(/\/csv$/i, msg => {
-    onCsvText(msg, bot, "");
-});
-
-// Call back
-bot.on("message", msg => {
-    message(msg, bot, userSteps);
-});
-
-get("Balance");
+console.clear();
 console.log("Bot-tele Running...");
+//!! 1 atau 3 String dalam object
+const data2 = await get(["Trade"]);
+const data = { lot: 0.03, pair: "BTCUSD".toUpperCase(), pnl: 21.2, win: true };
+console.log(data2);
+
+// postTrade(data);
