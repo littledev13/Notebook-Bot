@@ -46,4 +46,4 @@ const onStatistikText = (msg, bot) => {
   bot.sendMessage(chatId, "Statistik?");
 };
 
-module.exports = { onInputText, onRiwayatText, onCsvText, onStatistikText };
+export { onInputText, onRiwayatText, onCsvText, onStatistikText };

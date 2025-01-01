@@ -38,4 +38,4 @@ const message = (msg, bot, userSteps) => {
     }
   }
 };
-module.exports = message;
+export default message;
