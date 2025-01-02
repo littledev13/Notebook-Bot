@@ -2,10 +2,14 @@
 import TelegramBot from "node-telegram-bot-api";
 import { get, postTrade } from "./firebase.js";
 import { onInputText } from "./controller.js";
-import message from "./callback.js";
+import { message, callBack } from "./callback.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // TODO Variable
-const token = "7869224045:AAGQns3-FQuCJiGyA3vpDcIcUiu8VGHWcNc";
+console.clear();
+const token = process.env.TOKEN_BOT_TELE;
 const bot = new TelegramBot(token, { polling: true });
 // * Code
 // TODO input
@@ -15,8 +19,10 @@ bot.onText(/\/menu$/i, (msg) => {
 bot.on("message", (e) => {
   message(e, bot);
 });
+bot.on("callback_query", (callbackQuery) => {
+  callBack(callbackQuery, bot);
+});
 
-console.clear();
 console.log("Bot-tele Running...");
 //!! 1 atau 3 String dalam object
 const data2 = await get(["Trade"]);
