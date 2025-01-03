@@ -2,7 +2,7 @@
 
 ## List Task
 
-- Trade [x]
+- [x]Trade 
   - Pilih Pair [x]
   - Masukan Lot [x]
   - Pilih w/b/l [x]
