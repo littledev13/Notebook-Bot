@@ -1,7 +1,6 @@
-# Notebook Bot Telegram
+# Notebook Bot Telegram 🚀
 
-## List Task
-
+## List Task 📝
 - **Trade** ✅
   - [x] Pilih Pair
   - [x] Masukan Lot 
