@@ -108,21 +108,27 @@ const callBack = async (callbackQuery, bot) => {
       break;
 
     case "Balance":
-      bot.answerCallbackQuery(callbackQuery.id, {
-        text: "Pilih Pair",
-      });
-      bot.sendMessage(chatId, "Pilih Pair :", {
+      const data = await get(["Balance", "Summary"]);
+      const opts = {
         parse_mode: "Markdown",
         reply_markup: {
           inline_keyboard: [
             [
-              { text: "XAUUSD", callback_data: "XAUUSD" },
-              { text: "BTCUSD", callback_data: "BTCUSD" },
-              { text: "EURUSD", callback_data: "EURUSD" },
+              { text: "Trade 💼", callback_data: "Trade" },
+              { text: "Balance  💵", callback_data: "Balance" },
+              { text: "News 📰", callback_data: "News" },
+            ],
+            [
+              { text: "Statistik 📊", callback_data: "Statistik" },
+              { text: "History 📜", callback_data: "History" },
             ],
           ],
         },
-      });
+      };
+      const message = `*Balance* : ${data.Balance} USC\n*Deposit* : ${data["Total Deposit"]} USC\n*Withdraw* : ${data["Total Withdraw"]} USC`;
+
+      // Kirim pesan dengan tombol inline
+      bot.sendMessage(chatId, message, opts);
       break;
     case "News":
       bot.answerCallbackQuery(callbackQuery.id, {

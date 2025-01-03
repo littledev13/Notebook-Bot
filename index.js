@@ -1,6 +1,6 @@
 // TODO Import
 import TelegramBot from "node-telegram-bot-api";
-import { get, postTrade } from "./firebase.js";
+import { get, gets, postTrade } from "./firebase.js";
 import { onInputText } from "./controller.js";
 import { message, callBack } from "./callback.js";
 import dotenv from "dotenv";
@@ -25,7 +25,8 @@ bot.on("callback_query", (callbackQuery) => {
 
 console.log("Bot-tele Running...");
 //!! 1 atau 3 String dalam object
-const data2 = await get(["Trade"]);
+const data2 = await gets(["Trade"]);
+
 // console.log(data2);
 
 // postTrade(data);

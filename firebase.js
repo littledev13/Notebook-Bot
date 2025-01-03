@@ -6,7 +6,7 @@ import {
   getDocs,
   collection,
   setDoc,
-  getDocsFromCache,
+  getDoc,
 } from "firebase/firestore";
 // import { getAuth } from "firebase/auth";
 
@@ -27,6 +27,21 @@ const db = getFirestore(app);
 // const auth = getAuth(app);
 
 const get = async (e) => {
+  try {
+    const dataRef = doc(db, ...e); // Referensi ke dokumen
+    const docSnap = await getDoc(dataRef); // Mendapatkan dokumen
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      console.log("Dokumen tidak ditemukan!");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error mendapatkan dokumen:", error);
+    throw error;
+  }
+};
+const gets = async (e) => {
   try {
     const dataRef = collection(db, ...e); // Referensi ke dokumen
     const docSnap = await getDocs(dataRef); // Mendapatkan dokumen
@@ -65,4 +80,4 @@ const postTrade = async (data) => {
   }
 };
 
-export { app, db, get, postTrade };
+export { app, db, gets, get, postTrade };

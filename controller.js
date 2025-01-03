@@ -17,10 +17,9 @@ const onInputText = (msg, bot, ...params) => {
       ],
     },
   };
-  const message = `*Balance* : 245 USC\n*PNL*: 25 USC`;
 
   // Kirim pesan dengan tombol inline
-  bot.sendMessage(chatId, message, opts);
+  bot.sendMessage(chatId, "Pilih Menu  : ", opts);
 };
 
 export { onInputText };
