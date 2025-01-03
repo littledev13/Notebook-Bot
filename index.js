@@ -26,7 +26,6 @@ bot.on("callback_query", (callbackQuery) => {
 console.log("Bot-tele Running...");
 //!! 1 atau 3 String dalam object
 const data2 = await get(["Trade"]);
-const data = { lot: 0.03, pair: "BTCUSD".toUpperCase(), pnl: 21.2, win: true };
-console.log(data2);
+// console.log(data2);
 
 // postTrade(data);
