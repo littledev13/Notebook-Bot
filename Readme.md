@@ -8,3 +8,12 @@
   - [x] Pilih w/b/l
   - [x] Masukan Pnl
   - [x] Validasi Lot dan Pnl 🔑
+- **Balance** ✅
+
+  - [x] Nangkap Balance
+  - [x] Otomatis +- Balance
+  - [x] Otomatis +- Total Deposit/Withdraw
+  - [ ]
+    <!-- Test Data -->
+    [ pair: 'XAUUSD', lot: '12', win: true, pnl: '12' ]
+    "Balance", "Deposit", "history"

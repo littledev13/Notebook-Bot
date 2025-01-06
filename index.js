@@ -25,8 +25,6 @@ bot.on("callback_query", (callbackQuery) => {
 
 console.log("Bot-tele Running...");
 //!! 1 atau 3 String dalam object
-const data2 = await gets(["Trade"]);
+const data2 = await gets(["Balance", "Deposit", "history"]);
 
-// console.log(data2);
-
-// postTrade(data);
+postTrade({ Total: 40, Type: "Deposit" }, ["Balance", "Deposit", "history"]);

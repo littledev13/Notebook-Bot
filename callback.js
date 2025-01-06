@@ -1,7 +1,7 @@
 import { get, postTrade } from "./firebase.js";
 
-let trade = [];
-const userStates = {};
+let trade = {};
+const userStates = { Type: "Trade" };
 
 const message = async (msg, bot) => {
   const chatId = msg.chat.id;
@@ -13,7 +13,7 @@ const message = async (msg, bot) => {
 
     switch (currentStep) {
       case "askLot":
-        if (trade["pair"] == undefined) {
+        if (trade.pair == undefined) {
           bot.sendMessage(chatId, "Harap Pilih Pair!!!");
           break;
         }
@@ -22,7 +22,7 @@ const message = async (msg, bot) => {
           bot.sendMessage(chatId, "Masukan angka valid!!!");
           break;
         }
-        trade["lot"] = text;
+        trade.lot = text;
         bot.sendMessage(chatId, "Win ?", {
           parse_mode: "Markdown",
           reply_markup: {
@@ -38,9 +38,9 @@ const message = async (msg, bot) => {
         break;
       case "askPnl":
         if (
-          trade["pair"] == undefined &&
-          trade["lot"] == undefined &&
-          trade["win"] == undefined
+          trade.pair == undefined &&
+          trade.lot == undefined &&
+          trade.win == undefined
         ) {
           bot.sendMessage(chatId, "Harap Pilih Win/Lose!!!");
           break;
@@ -50,7 +50,7 @@ const message = async (msg, bot) => {
           bot.sendMessage(chatId, "Masukan angka valid!!!");
           break;
         }
-        trade["pnl"] = text;
+        trade.pnl = text;
         bot.sendMessage(
           chatId,
           `Pair : ${trade.pair} \nLot  : ${trade.lot} \nWin : ${
@@ -103,7 +103,7 @@ const callBack = async (callbackQuery, bot) => {
       });
       userStates[chatId] = { step: "askLot" };
       bot.sendMessage(chatId, "Berapa Lot : ");
-      trade["pair"] = callbackQuery.data;
+      trade.pair = callbackQuery.data;
 
       break;
 
@@ -183,11 +183,11 @@ const callBack = async (callbackQuery, bot) => {
       break;
     case "loseTrade":
     case "winTrade":
-      if (trade["pair"] == undefined && trade["lot"] == undefined) {
+      if (trade.pair == undefined && trade.lot == undefined) {
         bot.sendMessage(chatId, "Harap Masukan Lot!!!");
         break;
       }
-      trade["win"] = data == "winTrade" ? true : false;
+      trade.win = callbackQuery.data == "winTrade" ? true : false;
       bot.sendMessage(chatId, "Pnl :");
       userStates[chatId] = { step: "askPnl" };
       break;
@@ -200,7 +200,9 @@ const callBack = async (callbackQuery, bot) => {
         trade = [];
         break;
       }
-      postTrade(trade);
+      console.log(trade);
+
+      postTrade(trade, ["Trade"]);
       bot.sendMessage(chatId, "Trade Berhasil Disimpan!!");
       trade = [];
       break;

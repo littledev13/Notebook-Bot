@@ -5,8 +5,11 @@ import {
   doc,
   getDocs,
   collection,
+  addDoc,
   setDoc,
   getDoc,
+  updateDoc,
+  increment,
 } from "firebase/firestore";
 // import { getAuth } from "firebase/auth";
 
@@ -63,20 +66,31 @@ const gets = async (e) => {
     throw error;
   }
 };
-const postTrade = async (data) => {
+
+// TODO Bisa Di Persingkat posttrade & write
+const postTrade = async (data, ref) => {
   const tgl = new Date();
   const formattedDate = `${tgl.getDate()}-${
     tgl.getMonth() + 1
   }-${tgl.getFullYear()} : ${tgl.getHours()}.${tgl.getMinutes()}`;
   try {
-    await setDoc(doc(db, "Trade", formattedDate), {
-      lot: data.lot,
-      pair: data.pair,
-      pnl: data.pnl,
-      win: data.win,
+    const documentRef = doc(db, ...ref, formattedDate);
+    await setDoc(documentRef, data);
+    const balanceRef = doc(db, "Balance", "Summary");
+    await updateDoc(balanceRef, {
+      Balance:
+        data.Type == "Withdraw"
+          ? increment(-data.Total)
+          : increment(data.pnl || data.Total),
+      "Total Deposit":
+        data.Type == "Deposit" ? increment(data.Total) : increment(0),
+      "Total Withdraw":
+        data.Type == "Withdraw" ? increment(-data.Total) : increment(0),
     });
+
+    console.log("Dokumen berhasil dibuat");
   } catch (error) {
-    console.error("Error membuat dokumen:", error);
+    console.error("Error saat membuat atau memperbarui dokumen:", error);
   }
 };
 
