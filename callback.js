@@ -1,3 +1,4 @@
+import { eventsDaily, eventsWeekly } from "./fetchEconomicCalender.js";
 import { get, postTrade } from "./firebase.js";
 
 let trade = {};
@@ -106,7 +107,6 @@ const callBack = async (callbackQuery, bot) => {
       trade.pair = callbackQuery.data;
 
       break;
-
     case "Balance":
       const data = await get(["Balance", "Summary"]);
       const opts = {
@@ -132,16 +132,15 @@ const callBack = async (callbackQuery, bot) => {
       break;
     case "News":
       bot.answerCallbackQuery(callbackQuery.id, {
-        text: "Pilih Pair",
+        text: "News",
       });
       bot.sendMessage(chatId, "Pilih Pair :", {
         parse_mode: "Markdown",
         reply_markup: {
           inline_keyboard: [
             [
-              { text: "XAUUSD", callback_data: "XAUUSD" },
-              { text: "BTCUSD", callback_data: "BTCUSD" },
-              { text: "EURUSD", callback_data: "EURUSD" },
+              { text: "Daily", callback_data: "newsDaily" },
+              { text: "Weekly", callback_data: "newsWeekly" },
             ],
           ],
         },
@@ -219,6 +218,61 @@ const callBack = async (callbackQuery, bot) => {
           },
         }
       );
+      break;
+    case "newsDaily":
+      (async () => {
+        await bot.sendMessage(chatId, "*Daily News*\n", {
+          parse_mode: "Markdown",
+        });
+
+        for (const e of eventsDaily) {
+          await bot.sendMessage(
+            chatId,
+            `📊 *${e.name}* 📊\n
+      🔹 *Currency:* ${e.currency}
+      🔹 *Country:* ${e.country}
+      ⭐ *Importance:* ${e.importance}
+      📈 *Previous:* ${e.previous}
+      📊 *Forecast:* ${e.forecast}
+      ✅ *Actual:* _${e.actual || "N/A"}_
+      ⏰ *Time:* ${e.time}\n`,
+            { parse_mode: "Markdown" }
+          );
+        }
+        await bot.sendMessage(
+          chatId,
+          `Total news: ${eventsDaily.length}\nStay informed and trade wisely! 💹\n*‼️Time +2H*`,
+          { parse_mode: "Markdown" }
+        );
+      })();
+    case "newsWeekly":
+      (async () => {
+        const event = await eventsWeekly;
+        console.log(event);
+        await bot.sendMessage(chatId, "*Weekly News*\n", {
+          parse_mode: "Markdown",
+        });
+
+        for (const e of event) {
+          await bot.sendMessage(
+            chatId,
+            `📊 *${e.name}* 📊\n
+      🔹 *Currency:* ${e.currency}
+      🔹 *Country:* ${e.country}
+      ⭐ *Importance:* ${e.importance}
+      📈 *Previous:* ${e.previous}
+      📊 *Forecast:* ${e.forecast}
+      ✅ *Actual:* _${e.actual || "N/A"}_
+      ⏰ *Time:* ${e.time}\n`,
+            { parse_mode: "Markdown" }
+          );
+        }
+        await bot.sendMessage(
+          chatId,
+          `Total news: ${event.length}\nStay informed and trade wisely! 💹\n*‼️Time +2H*`,
+          { parse_mode: "Markdown" }
+        );
+      })();
       break;
     default:
       bot.answerCallbackQuery(callbackQuery.id, { text: "Unknown action." });

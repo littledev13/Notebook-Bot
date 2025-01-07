@@ -17,3 +17,4 @@
     <!-- Test Data -->
     [ pair: 'XAUUSD', lot: '12', win: true, pnl: '12' ]
     "Balance", "Deposit", "history"
+    https://www.forexfactory.com/thread/1247273-free-news-api-machine-learning-live-trading-and
