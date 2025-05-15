@@ -8,20 +8,12 @@ const SECRET_KEY =
   "776a88db6706e2eb7711a65bc40a6456d1078f2073b36763976cd190b88119e3";
 
 const getData = async (path, query = "") => {
-  const body = ""; // Kosong untuk GET
-  const message = ts + "GET" + path + query;
+  const message = ts + "GET" + path + (query ? "?" + query : "");
 
-  // Generate signature
-
-  // const signature = crypto.HmacSHA256(message, SECRET_KEY).toString();
   const signature = crypto
     .createHmac("sha256", SECRET_KEY)
     .update(message)
     .digest("Base64");
-
-  console.log(message);
-  console.log(signature);
-  // Header
   const headers = {
     "ACCESS-KEY": API_KEY,
     "ACCESS-PASSPHRASE": "irvan13699",
@@ -30,17 +22,15 @@ const getData = async (path, query = "") => {
     locale: "en-US",
     "Content-Type": "application/json",
   };
-
   try {
-    const response = await axios.get(BASE_URL + path, {
-      headers,
-    });
-    console.log("sukses");
+    const response = await axios.get(
+      BASE_URL + path + (query ? "?" + query : ""),
+      {
+        headers,
+      }
+    );
     return response;
   } catch (error) {
-    console.log("error");
-
-    // console.log("Response Error:", error);
     if (error.response) {
       console.log("Response Error:", error.response.data.msg);
     } else {
@@ -48,14 +38,34 @@ const getData = async (path, query = "") => {
     }
   }
 };
+const tgl = (hari) => {
+  return ts - hari * 24 * 60 * 60 * 1000;
+};
+const balance = () => {
+  const path = "/api/v2/account/all-account-balance";
+  return getData(path)
+    .then((data) => {
+      return {
+        msg: data.data.msg,
+        data: data.data.data,
+      };
+    })
+    .catch((e) => {
+      return {
+        msg: "Error fetching balance",
+        error: e.message || "Unknown error",
+      };
+    });
+};
 
-const path = "/api/v2/mix/position/all-position?";
-const month = ts - 7 * 24 * 60 * 60 * 1000;
-const params = { startTime: month, endTime: ts };
-// const query = `startTime=${params.startTime}&endTime=${params.endTime}`;
+const path = "/api/v2/account/all-account-balance";
+const params = { startTime: tgl(3), endTime: ts };
 const query = "productType=USDT-FUTURES";
 
 (async () => {
-  const data = await getData(path, query);
-  // console.log(data); // Tampilkan data setelah mendapatkan hasil
+  ``;
+  const data = await getData(path);
+  // console.log(data.data);
 })();
+
+export { balance };
