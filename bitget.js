@@ -45,4 +45,9 @@ const tgl = hari => {
     return ts - hari * 24 * 60 * 60 * 1000;
 };
 
+(async () => {
+    const data = await getData("/api/v2/account/bot-assets");
+    console.log(data);
+})();
+
 export { getData, tgl };
