@@ -46,8 +46,11 @@ const tgl = hari => {
 };
 
 (async () => {
-    const data = await getData("/api/v2/account/bot-assets");
-    console.log(data);
+    const data = await getData(
+        "/api/v2/mix/position/history-position",
+        "productType=USDT-FUTURES"
+    );
+    console.log(data.data.list);
 })();
 
 export { getData, tgl };
