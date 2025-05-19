@@ -1,5 +1,5 @@
-import { eventsDaily, eventsWeekly } from "./fetchEconomicCalender.js";
-import { get, postTrade } from "./firebase.js";
+import { eventsDaily, eventsWeekly } from "../widget/fetchEconomicCalender.js";
+import { get, postTrade } from "../firebase/firebase.js";
 
 let trade = {};
 const userStates = { Type: "Trade" };

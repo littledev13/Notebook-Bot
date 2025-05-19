@@ -1,13 +1,13 @@
 // TODO Import
 import TelegramBot from "node-telegram-bot-api";
 import express from "express";
-const app = express();
-import { get, gets, postTrade } from "./firebase.js";
-import { onInputText } from "./controller.js";
-import { message, callBack } from "./callback.js";
+import { get, gets, postTrade } from "./firebase/firebase.js";
+import { onInputText } from "./tele/controller.js";
+import { message, callBack } from "./tele/callback.js";
 import dotenv from "dotenv";
-import { eventsDaily, eventsWeekly } from "./fetchEconomicCalender.js";
+import { eventsDaily, eventsWeekly } from "./widget/fetchEconomicCalender.js";
 
+const app = express();
 dotenv.config();
 
 // TODO Variable
@@ -28,7 +28,7 @@ bot.on("callback_query", (callbackQuery) => {
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
-app.listen(3000, (pre) => console.log("Server Tele running... "));
+app.listen(3000, () => console.log("Server Tele running... "));
 
 // console.log("Bot-tele Running...");
 // //!! 1 atau 3 String dalam object
@@ -50,5 +50,4 @@ app.listen(3000, (pre) => console.log("Server Tele running... "));
 // };
 
 // const dateInGMT7 = new Intl.DateTimeFormat("id-ID", options).format(dateUTC);
-app();
 export { app };
