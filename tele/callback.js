@@ -1,5 +1,7 @@
 import { eventsDaily, eventsWeekly } from "../widget/fetchEconomicCalender.js";
 import { get, postTrade } from "../firebase/firebase.js";
+import { getData } from "../bitget/bitget.js";
+import { balance, position } from "../bitget/pathApi.js";
 
 let trade = {};
 const userStates = { Type: "Trade" };
@@ -10,8 +12,6 @@ const message = async (msg, bot) => {
 
   if (userStates[chatId]) {
     const currentStep = userStates[chatId].step;
-    // console.log(currentStep);
-
     switch (currentStep) {
       case "askLot":
         if (trade.pair == undefined) {
@@ -79,6 +79,7 @@ const message = async (msg, bot) => {
 const callBack = async (callbackQuery, bot) => {
   const chatId = callbackQuery.message.chat.id;
   const data = callbackQuery.data;
+  let message = "";
 
   switch (data) {
     case "Trade":
@@ -108,43 +109,32 @@ const callBack = async (callbackQuery, bot) => {
 
       break;
     case "Balance":
-      const data = await get(["Balance", "Summary"]);
-      const opts = {
-        parse_mode: "Markdown",
-        reply_markup: {
-          inline_keyboard: [
-            [
-              { text: "Trade 💼", callback_data: "Trade" },
-              { text: "Balance  💵", callback_data: "Balance" },
-              { text: "News 📰", callback_data: "News" },
-            ],
-            [
-              { text: "Statistik 📊", callback_data: "Statistik" },
-              { text: "History 📜", callback_data: "History" },
-            ],
-          ],
-        },
-      };
-      const message = `*Balance* : ${data.Balance} USC\n*Deposit* : ${data["Total Deposit"]} USC\n*Withdraw* : ${data["Total Withdraw"]} USC`;
+      const balance2 = await getData(balance);
 
-      // Kirim pesan dengan tombol inline
-      bot.sendMessage(chatId, message, opts);
+      function formatTelegramMessage(data) {
+        let totalBalance = data.reduce(
+          (acc, account) => acc + parseFloat(account.usdtBalance),
+          0
+        );
+        const message = `*Total Balance* : ${totalBalance.toFixed(2)} USDT${data
+          .map(
+            (account) =>
+              `\n• ${
+                account.accountType.charAt(0).toUpperCase() +
+                account.accountType.slice(1)
+              }: ${parseFloat(account.usdtBalance).toFixed(2)} USDT`
+          )
+          .join("")}`;
+
+        return message;
+      }
+      message = formatTelegramMessage(balance2.data);
+      console.log(message);
+      bot.sendMessage(chatId, message);
+      message = "";
       break;
     case "News":
-      bot.answerCallbackQuery(callbackQuery.id, {
-        text: "News",
-      });
-      bot.sendMessage(chatId, "Pilih Pair :", {
-        parse_mode: "Markdown",
-        reply_markup: {
-          inline_keyboard: [
-            [
-              { text: "Daily", callback_data: "newsDaily" },
-              { text: "Weekly", callback_data: "newsWeekly" },
-            ],
-          ],
-        },
-      });
+      bot.sendMessage(chatId, "On Update : https://sslecal2.investing.com/");
       break;
     case "History":
       bot.answerCallbackQuery(callbackQuery.id, {
@@ -273,6 +263,15 @@ const callBack = async (callbackQuery, bot) => {
           { parse_mode: "Markdown" }
         );
       })();
+      break;
+    case "position":
+      const position2 = await getData(position, "productType=USDT-FUTURES");
+      position2.data.map((a) => {
+        bot.sendMessage(
+          chatId,
+          `Pair : ${a.symbol} x${a.leverage}\nBuy/Sell :${a.holdSide}\nMargin : ${a.marginSize}\nPnL : ${a.unrealizedPL}\nFee : ${a.deductedFee}`
+        );
+      });
       break;
     default:
       bot.answerCallbackQuery(callbackQuery.id, { text: "Unknown action." });

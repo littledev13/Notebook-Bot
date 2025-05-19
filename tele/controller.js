@@ -13,6 +13,7 @@ const onInputText = (msg, bot, ...params) => {
         [
           { text: "Statistik 📊", callback_data: "Statistik" },
           { text: "History 📜", callback_data: "History" },
+          { text: "Position 🎮", callback_data: "position" },
         ],
       ],
     },

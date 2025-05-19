@@ -12,3 +12,14 @@ const bot = "/api/v2/account/bot-assets";
 const position = "/api/v2/mix/position/all-position"; // params : productType =USDT-FUTURES
 const positionHistory = "/api/v2/mix/position/history-position"; // params : productType =USDT-FUTURES
 const order = "/api/v2/mix/order/orders-pending";
+
+export {
+  balance,
+  spotAsset,
+  spotHistory,
+  spotOrder,
+  bot,
+  position,
+  positionHistory,
+  order,
+};
