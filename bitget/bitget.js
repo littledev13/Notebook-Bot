@@ -1,14 +1,16 @@
 import crypto from "crypto";
 import axios from "axios";
 
-const ts = Math.round(Date.now());
+const ts = () => Date.now();
+console.log(ts);
+
 const BASE_URL = "https://api.bitget.com";
 const API_KEY = "bg_e9168e5a18f0df7b9138984543b4df4e";
 const SECRET_KEY =
   "776a88db6706e2eb7711a65bc40a6456d1078f2073b36763976cd190b88119e3";
 
 const getData = async (path, query = "") => {
-  const message = ts + "GET" + path + (query ? "?" + query : "");
+  const message = ts() + "GET" + path + (query ? "?" + query : "");
 
   const signature = crypto
     .createHmac("sha256", SECRET_KEY)
@@ -18,7 +20,7 @@ const getData = async (path, query = "") => {
     "ACCESS-KEY": API_KEY,
     "ACCESS-PASSPHRASE": "irvan13699",
     "ACCESS-SIGN": signature,
-    "ACCESS-TIMESTAMP": ts,
+    "ACCESS-TIMESTAMP": ts(),
     locale: "en-US",
     "Content-Type": "application/json",
   };
@@ -36,6 +38,7 @@ const getData = async (path, query = "") => {
   } catch (error) {
     if (error.response) {
       console.log("Response Error:", error.response.data.msg);
+      console.log(ts());
     } else {
       console.log("Network/System Error:", error.message);
     }

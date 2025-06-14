@@ -20,11 +20,12 @@ bot.onText(/\/menu$/i, (msg) => {
   onInputText(msg, bot);
 });
 bot.on("message", (e) => {
-  console.log(`Waktu sekarang: ${hari.toLocaleTimeString()}`);
+  // console.log(`Waktu sekarang: ${hari.toLocaleTimeString()}`);
+  console.log(e.text);
+
   message(e, bot);
 });
 bot.on("callback_query", (callbackQuery) => {
-  console.log(`Waktu sekarang: ${hari.toLocaleTimeString()}`);
   callBack(callbackQuery, bot);
 });
 

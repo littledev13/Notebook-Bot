@@ -128,10 +128,10 @@ const callBack = async (callbackQuery, bot) => {
 
         return message;
       }
-      message = formatTelegramMessage(balance2.data);
-      console.log(message);
-      bot.sendMessage(chatId, message);
-      message = "";
+      console.log(balance2);
+      // message = formatTelegramMessage(balance2.data);
+      // bot.sendMessage(chatId, message);
+      // message = "";
       break;
     case "News":
       bot.sendMessage(chatId, "On Update : https://sslecal2.investing.com/");
@@ -273,6 +273,7 @@ const callBack = async (callbackQuery, bot) => {
         );
       });
       break;
+      ``;
     default:
       bot.answerCallbackQuery(callbackQuery.id, { text: "Unknown action." });
   }
